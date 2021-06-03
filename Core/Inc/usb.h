@@ -11,6 +11,7 @@
 
 #include "stm32f1xx_hal.h"
 #include "flash.h"
+#include "usb_device.h"
 
 // Para la transmision de datos es necesario conocer el numero de estos
 #define USB_SENSOR_MODULES 2

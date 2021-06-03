@@ -18,6 +18,14 @@
 flash_error write_flash(flash_args args, void* data)
 {
   flash_error err = FLASH_ALL_OK;
+  // La escritura se realiza por half-word, word o double word.
+  // Es deseable no realizar muchas lecturas, solamente durante configuración
+  // Por ende, se recomienda desactivar las funciones de control al programar la memoria flash
+  // Adicionalmente, para prevenir el inaccionamiento accidental del panel de control
+  // considerese el uso de un timeout con un timer.
+  // Word: 32 bits. En gran parte de los casos, necesitamos escribir 32 bits, asi que
+  // la programación se realizara asi.
+
   //Escribir
 
   if(0)
