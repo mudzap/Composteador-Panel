@@ -104,6 +104,10 @@ int main(void)
   MX_CAN_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
+  flash_init();
+
+  // Turn loads off at startup
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 
   /* USER CODE END 2 */
 

@@ -9,38 +9,66 @@
 #include "flash.h"
 
 /**
- * @brief	Summary
- * @param	Arguments
+ * @brief	Initializes flash and eeprom emulation.
  *
- * @retval	Return
+ * @retval	Flash error
  */
-
-flash_error write_flash(flash_args args, void* data)
+flash_error init_flash()
 {
   flash_error err = FLASH_ALL_OK;
-  // La escritura se realiza por half-word, word o double word.
-  // Es deseable no realizar muchas lecturas, solamente durante configuración
-  // Por ende, se recomienda desactivar las funciones de control al programar la memoria flash
-  // Adicionalmente, para prevenir el inaccionamiento accidental del panel de control
-  // considerese el uso de un timeout con un timer.
-  // Word: 32 bits. En gran parte de los casos, necesitamos escribir 32 bits, asi que
-  // la programación se realizara asi.
+  // Unlock flash for writing (EEPROM emulation)
+  HAL_FLASH_Unlock();
 
-  //Escribir
+  // Init EEPROM emulation
+  if( EE_Init() != FLASH_COMPLETE)
+  {
+    err = FLASH_INIT_FAIL;
+  }
 
-  if(0)
-    err = FLASH_WRITE_FAIL;
+  // Fill EEPROM variables addresses
+  for(uint16_t i = 1; i <= NumbOfVar; i++)
+  {
+	  VirtAddVarTab[i-1] = i;
+  }
 
   return err;
 }
 
-flash_error read_flash(flash_args args, void* data)
+
+/**
+ * @brief	Writes to flash.
+ * @param	Pointer of 16 bit sized type where data is stored.
+ * @retval	Flash error
+ */
+flash_error write_flash(uint16_t* data)
 {
   flash_error err = FLASH_ALL_OK;
+  for (i = 0; i < NumbOfVar; i++)
+  {
+	if((EE_WriteVariable(VirtAddVarTab[i], data[i])) != FLASH_COMPLETE)
+	{
+	  err = FLASH_WRITE_FAIL;
+	}
+  }
 
-  //Leer
-  if(0)
-    err = FLASH_READ_FAIL;
+  return err;
+}
+
+/**
+ * @brief	Reads from flash.
+ * @param	Pointer of 16 bit sized type where data is stored.
+ * @retval	Flash error
+ */
+flash_error read_flash(flash_args args, uint16_t* data)
+{
+  flash_error err = FLASH_ALL_OK;
+  for (i = 0; i < NumbOfVar; i++)
+  {
+    if((EE_ReadVariable(VirtAddVarTab[i], &data[i])) != FLASH_COMPLETE)
+   	{
+      err = FLASH_READ_FAIL;
+   	}
+  }
 
   return err;
 }

@@ -32,51 +32,21 @@
 #endif
 */
 
-/* Virtual address for variables to store */
-#define USB_SAMPLE_RATE_ADDR = 0x0000
-#define CAN_SAMPLE_RATE_ADDR = 0x0400
-#define MIN_HUMIDITY_ADDR = 0x0800
-#define MAX_HUMIDITY_ADDR = 0x0C00
-#define MIN_TEMP_ADDR = 0x1000
-#define MAX_TEMP_ADDR = 0x1400
-// And so on, as required
-
-/*
-typedef struct eeprom_data {
-  uint16 usb_sample_rate;
-  float can_sample_rate;
-  float humidity_lower_thresh;
-  float humidity_upper_thresh;
-  float temperature_lower_thresh;
-  float temperature_upper_thresh;
-} eeprom_data;
-*/
-
-/* Define a virtual addresses for config variables to store */
-/* NumbOfVar is defined in eeprom.h */
-static uint16_t VirtAddVarTab[NumbOfVar] = {0x0000, 0x1000};
-
-/* Flash redundancy pages */
-/* MAKE SURE */
-/*
-#define FLASH_REDUNDANCY_PAGES 5
-#if (FLASH_REDUNDANCY_PAGES < 0)
-	#warning FLASH: NO REDUNDANT PAGES AVAILABLE FOR FLASH MEMORY, FLASH DATA MIGHT BE COMPROMISED
-#endif
-*/
+/* Define a virtual addresses for config variables to store
+ * These are filled automatically on init_flash()
+ * NumbOfVar is defined in eeprom.h
+ */
+static uint16_t VirtAddVarTab[NumbOfVar];
 
 typedef enum flash_error {
   FLASH_ALL_OK,
+  FLASH_INIT_FAIL,
   FLASH_WRITE_FAIL,
   FLASH_READ_FAIL,
 } flash_error;
 
-typedef struct flash_args {
-  int foo;
-} flash_args;
-
-flash_error write_flash(flash_args args, void* data);
-
-flash_error read_flash(flash_args args, void* data);
+flash_error init_flash();
+flash_error write_flash(uint16_t* data);
+flash_error read_flash(uint16_t* data);
 
 #endif
