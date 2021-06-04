@@ -59,7 +59,7 @@ flash_error write_flash(uint16_t* data)
  * @param	Pointer of 16 bit sized type where data is stored.
  * @retval	Flash error
  */
-flash_error read_flash(flash_args args, uint16_t* data)
+flash_error read_flash(uint16_t* data)
 {
   flash_error err = FLASH_ALL_OK;
   for (i = 0; i < NumbOfVar; i++)

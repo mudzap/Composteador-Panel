@@ -22,14 +22,14 @@
 #define DEFAULT_USB_SAMPLE_TIME 1
 #define MINIMUM_USB_SAMPLE_TIME 1
 #define MAXIMUM_USB_SAMPLE_TIME 3600
-static int usb_sample_time = DEFAULT_USB_SAMPLE_TIME;
+static uint16_t usb_sample_time = DEFAULT_USB_SAMPLE_TIME;
 
 typedef enum usb_error {
   USB_ALL_OK,
   USB_TRANSMISSION_FAIL,
 } usb_error;
 
-flash_error usb_set_sample_time(const int time);
+uint16_t usb_set_sample_time(const uint16_t time);
 
 usb_error usb_send_data(float* data);
 

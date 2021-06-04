@@ -19,9 +19,9 @@
 // El checkeo del tiempo minimo y maximo se realiza de forma
 // redundante, este debe de ser revisado en la interfaz
 // pero ofrece proteccion adicional de malos programadores (:-))
-flash_error usb_set_sample_time(const int time)
+uint16_t usb_set_sample_time(const uint16_tss time)
 {
-  int new_time = time;
+  uint16_t new_time = time;
 
   if (new_time < MINIMUM_USB_SAMPLE_TIME)
     new_time = MINIMUM_USB_SAMPLE_TIME;
@@ -31,9 +31,10 @@ flash_error usb_set_sample_time(const int time)
 
   usb_sample_time = new_time;
 
-  flash_args f_args = {0}; // = blah blah
-  int* data_ptr = &new_time;
-  return write_flash(f_args, (void*)data_ptr);
+  //void* data_ptr = &new_time;
+  //return write_flash((void*)data_ptr); //No es necesario, es mejor manejarlo desde la interfaz.
+
+  return usb_sample_time;
 
 }
 
@@ -52,7 +53,7 @@ usb_error usb_send_data(float* data)
 
   // Copia los datos para librar el mutex y seguir trabajando
   float fixed_data[USB_DATA_VALUES];
-  for(int i = 0; i < USB_DATA_VALUES; i++)
+  for(uint16_t i = 0; i < USB_DATA_VALUES; i++)
   {
     fixed_data[i] = data[i];
   }

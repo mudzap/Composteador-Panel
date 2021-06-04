@@ -29,6 +29,11 @@ typedef enum control_error {
 
 static GPIO_PinState defaultStates[NUMBER_OF_LOADS];
 
+#define DEFAULT_TEMP_UT 0.f
+#define DEFAULT_TEMP_LT 0.f
+#define DEFAULT_HUM_UT 	0.f
+#define DEFAULT_HUM_LT 	0.f
+
 /* Variables to store thresholds */
 static float temp_ut;
 static float temp_lt;

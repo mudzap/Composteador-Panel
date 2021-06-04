@@ -18,9 +18,10 @@ static float uint16_to_float(uint16_t* data)
 {
   /* Little-endian is the default memory format for ARM processors. */
   /* If big-endianness were to be used, then the data indexes should be swapped */
-  const uint16_t lsb = data[0];
-  const uint16_t msb = data[1];
-  return (float)( (uint32_t)(msb << 16) | (uint32_t)(lsb) );
+  //const uint16_t lsb = data[0];
+  //const uint16_t msb = data[1];
+  //return (float)( (uint32_t)(msb << 16) | (uint32_t)(lsb) );
+  return (float)*(float*)data;
 }
 
 /**
@@ -44,10 +45,11 @@ control_error control_init()
 
   if(read_flash(stored_vars) != FLASH_ALL_OK)
   {
-	  temp_ut = default_temp_ut;
-	  temp_lt = default_temp_lt;
-	  hum_ut = default_temp_ut;
-	  hum_lt = default_temp_lt;
+	  temp_ut = DEFAULT_TEMP_UT;
+	  temp_lt = DEFAULT_TEMP_LT;
+	  hum_ut = DEFAULT_HUM_UT;
+	  hum_lt = DEFAULT_HUM_LT;
+	  usb_sample_time = DEFAULT_USB_SAMPLE_TIME;
 	  err CONTROL_INIT_FAIL;
   }
   else
@@ -57,6 +59,7 @@ control_error control_init()
 	  temp_lt = uint16_to_float(&stored_vars[2]);
 	  hum_ut = uint16_to_float(&stored_vars[4]);
 	  hum_lt = uint16_to_float(&stored_vars[6]);
+	  usb_sample_time = stored_vars[8];
   }
 
   return err;
