@@ -27,7 +27,13 @@ typedef enum control_error {
   CONTROL_INIT_FAIL,
 } control_error;
 
-static uint8_t load_states[NUMBER_OF_LOADS];
+static GPIO_PinState defaultStates[NUMBER_OF_LOADS];
+
+/* Variables to store thresholds */
+static float temp_ut;
+static float temp_lt;
+static float hum_ut;
+static float hum_lt;
 
 control_error control_init();
 void set_load_states(GPIO_PinState* states);

@@ -8,6 +8,20 @@
 
 #include "control.h"
 
+/**
+ * @brief	Helper function for transforming 2 16 bit data into a 32 bit float
+ * @param 	Pointer to 16 bit data
+ *
+ * @retval  Float
+ */
+static float uint16_to_float(uint16_t* data)
+{
+  /* Little-endian is the default memory format for ARM processors. */
+  /* If big-endianness were to be used, then the data indexes should be swapped */
+  const uint16_t lsb = data[0];
+  const uint16_t msb = data[1];
+  return (float)( (uint32_t)(msb << 16) | (uint32_t)(lsb) );
+}
 
 /**
  * @brief	Initializes control
@@ -16,6 +30,36 @@
  */
 control_error control_init()
 {
+  control_error err = CONTROL_ALL_OK;
+
+  // Turn loads off for safety purposes
+  for(uint8_t i = 0; i < NUMBER_OF_LOADS; i++)
+  {
+  	defaultStates[i] = 0;
+  }
+  set_load_states(defaultStates);
+
+  // Read stored values
+  uint16_t stored_vars[NumbOfVars];
+
+  if(read_flash(stored_vars) != FLASH_ALL_OK)
+  {
+	  temp_ut = default_temp_ut;
+	  temp_lt = default_temp_lt;
+	  hum_ut = default_temp_ut;
+	  hum_lt = default_temp_lt;
+	  err CONTROL_INIT_FAIL;
+  }
+  else
+  {
+	  /* These values are speculative and should be defined according to how variables in flash are defined */
+	  temp_ut = uint16_to_float(&stored_vars[0]);
+	  temp_lt = uint16_to_float(&stored_vars[2]);
+	  hum_ut = uint16_to_float(&stored_vars[4]);
+	  hum_lt = uint16_to_float(&stored_vars[6]);
+  }
+
+  return err;
 
 }
 

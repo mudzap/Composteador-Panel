@@ -61,14 +61,11 @@ usb_error usb_send_data(float* data)
 
   // Transmite datos
   usb_error err = USB_ALL_OK;
-  for(int i = 0; i < USB_DATA_VALUES; i++)
-  {
-    const tx_data = fixed_data[i];
-    // Parse data into usb packet
-    // Append data to mailbox for batch transmission
-    // OR, send immediately
-    if(0)
-      err = USB_TRANSMISSION_FAIL;
+
+  const uint8_t* tx_data = (uint8_t*)fixed_data;
+  const uint16_t length = USB_DATA_VALUES*4;
+  if(CDC_Transmit_FS(tx_data, length) != USBD_OK) {
+    err = USB_TRANSMISSION_FAIL;
   }
 
   return err;
