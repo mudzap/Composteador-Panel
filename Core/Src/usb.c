@@ -72,3 +72,19 @@ usb_error usb_send_data(float* data)
   return err;
 
 }
+
+// Does this really need a function?
+GPIO_PinState usb_detect_vbus()
+{
+  return HAL_GPIO_ReadPin(USB_VBUS_PORT, USB_VBUS_PIN);
+}
+
+// Ditto.
+void usb_pullup_dp()
+{
+  HAL_GPIO_WritePin(USB_PULLUP_PORT, USB_PULLUP_PIN, 1);
+}
+void usb_set_high_impedance_dp()
+{
+  HAL_GPIO_WritePin(USB_PULLUP_PORT, USB_PULLUP_PIN, 0);
+}

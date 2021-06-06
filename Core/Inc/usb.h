@@ -24,6 +24,12 @@
 #define MAXIMUM_USB_SAMPLE_TIME 3600
 static uint16_t usb_sample_time = DEFAULT_USB_SAMPLE_TIME;
 
+// Pullup y VBUS
+#define USB_PULLUP_PORT GPIOB
+#define USB_PULLUP_PIN GPIO_PIN_4
+#define USB_VBUS_PORT GPIOB
+#define USB_VBUS_PIN GPIO_PIN_15
+
 typedef enum usb_error {
   USB_ALL_OK,
   USB_TRANSMISSION_FAIL,
@@ -33,6 +39,8 @@ uint16_t usb_set_sample_time(const uint16_t time);
 
 usb_error usb_send_data(float* data);
 
-/* ... */
+GPIO_PinState usb_detect_vbus();
+void usb_pullup_dp();
+void usb_set_high_impedance_dp();
 
 #endif
