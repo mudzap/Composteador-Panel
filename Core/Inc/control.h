@@ -27,18 +27,16 @@ typedef enum control_error {
   CONTROL_INIT_FAIL,
 } control_error;
 
-static GPIO_PinState defaultStates[NUMBER_OF_LOADS];
+/* Variables to store thresholds */
+extern float temp_ut;
+extern float temp_lt;
+extern float hum_ut;
+extern float hum_lt;
 
 #define DEFAULT_TEMP_UT 0.f
 #define DEFAULT_TEMP_LT 0.f
 #define DEFAULT_HUM_UT 	0.f
 #define DEFAULT_HUM_LT 	0.f
-
-/* Variables to store thresholds */
-static float temp_ut;
-static float temp_lt;
-static float hum_ut;
-static float hum_lt;
 
 control_error control_init();
 void set_load_states(GPIO_PinState* states);

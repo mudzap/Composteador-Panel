@@ -7,6 +7,14 @@
  */
 
 #include "flash.h"
+#include "eeprom.h"
+
+/* Define a virtual addresses for config variables to store
+ * These are filled automatically on init_flash()
+ * NumbOfVar is defined in eeprom.h
+ */
+uint16_t VirtAddVarTab[NumbOfVar];
+
 
 /**
  * @brief	Initializes flash and eeprom emulation.

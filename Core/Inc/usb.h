@@ -22,7 +22,7 @@
 #define DEFAULT_USB_SAMPLE_TIME 1
 #define MINIMUM_USB_SAMPLE_TIME 1
 #define MAXIMUM_USB_SAMPLE_TIME 3600
-static uint16_t usb_sample_time = DEFAULT_USB_SAMPLE_TIME;
+extern uint16_t usb_sample_time;
 
 // Pullup y VBUS
 #define USB_PULLUP_PORT GPIOB

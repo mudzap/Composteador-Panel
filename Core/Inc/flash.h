@@ -32,12 +32,6 @@
 #endif
 */
 
-/* Define a virtual addresses for config variables to store
- * These are filled automatically on init_flash()
- * NumbOfVar is defined in eeprom.h
- */
-static uint16_t VirtAddVarTab[NumbOfVar];
-
 typedef enum flash_error {
   FLASH_ALL_OK,
   FLASH_INIT_FAIL,

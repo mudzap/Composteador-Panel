@@ -8,6 +8,8 @@
 
 #include "usb.h"
 
+uint16_t usb_sample_time = DEFAULT_USB_SAMPLE_TIME;
+
 /**
  * @brief	Function called by interface for setting data transmission rate (for usb).
  * @param	New Sampling time

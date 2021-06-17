@@ -7,6 +7,15 @@
  */
 
 #include "control.h"
+#include "usb.h"
+
+static GPIO_PinState defaultStates[NUMBER_OF_LOADS];
+
+/* Variables to store thresholds */
+float temp_ut = DEFAULT_TEMP_UT;
+float temp_lt = DEFAULT_TEMP_LT;
+float hum_ut = DEFAULT_HUM_UT;
+float hum_lt = DEFAULT_HUM_LT;
 
 /**
  * @brief	Helper function for transforming 2 16 bit data into a 32 bit float
