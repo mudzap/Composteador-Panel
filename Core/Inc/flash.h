@@ -10,7 +10,6 @@
 #define INC_FLASH_H_
 
 #include "stm32f1xx_hal.h"
-#include "eeprom.h"
 
 /* Establishes last flash memory page address depending on device memory density (See datasheet)*/
 /* This will ensure there is no overflow when reading or writing */
@@ -31,6 +30,8 @@
 	#error FLASH DENSITY NOT DEFINED AT flash.h
 #endif
 */
+
+#define NUMBER_OF_VARS 8
 
 typedef enum flash_error {
   FLASH_ALL_OK,

@@ -105,7 +105,7 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
-  flash_init();
+  init_flash();
   control_init();
   usb_set_high_impedance_dp();
 

@@ -8,6 +8,7 @@
 
 #include "control.h"
 #include "usb.h"
+#include "flash.h"
 
 static GPIO_PinState defaultStates[NUMBER_OF_LOADS];
 
@@ -50,7 +51,7 @@ control_error control_init()
   set_load_states(defaultStates);
 
   // Read stored values
-  uint16_t stored_vars[NumbOfVars];
+  uint16_t stored_vars[NUMBER_OF_VARS];
 
   if(read_flash(stored_vars) != FLASH_ALL_OK)
   {
@@ -59,7 +60,7 @@ control_error control_init()
 	  hum_ut = DEFAULT_HUM_UT;
 	  hum_lt = DEFAULT_HUM_LT;
 	  usb_sample_time = DEFAULT_USB_SAMPLE_TIME;
-	  err CONTROL_INIT_FAIL;
+	  err = CONTROL_INIT_FAIL;
   }
   else
   {
@@ -104,7 +105,7 @@ void set_load_state(uint8_t load_index, GPIO_PinState state)
 	return; // If unspecified, don't write anything
   }
 
-  HAL_GPIO_WritePin(LOAD_GPIO_PORT, LOAD_GPIO_INITIAL_PIN + i, state);
+  HAL_GPIO_WritePin(LOAD_GPIO_PORT, LOAD_GPIO_INITIAL_PIN + load_index, state);
 
 }
 

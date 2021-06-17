@@ -7,13 +7,12 @@
  */
 
 #include "flash.h"
-#include "eeprom.h"
 
 /* Define a virtual addresses for config variables to store
  * These are filled automatically on init_flash()
  * NumbOfVar is defined in eeprom.h
  */
-uint16_t VirtAddVarTab[NumbOfVar];
+uint16_t VirtAddVarTab[NUMBER_OF_VARS];
 
 
 /**
@@ -28,13 +27,13 @@ flash_error init_flash()
   HAL_FLASH_Unlock();
 
   // Init EEPROM emulation
-  if( EE_Init() != FLASH_COMPLETE)
+  //if( EE_Init() != FLASH_COMPLETE)
   {
     err = FLASH_INIT_FAIL;
   }
 
   // Fill EEPROM variables addresses
-  for(uint16_t i = 1; i <= NumbOfVar; i++)
+  for(int i = 1; i <= NUMBER_OF_VARS; i++)
   {
 	  VirtAddVarTab[i-1] = i;
   }
@@ -51,9 +50,9 @@ flash_error init_flash()
 flash_error write_flash(uint16_t* data)
 {
   flash_error err = FLASH_ALL_OK;
-  for (i = 0; i < NumbOfVar; i++)
+  for (int i = 0; i < NUMBER_OF_VARS; i++)
   {
-	if((EE_WriteVariable(VirtAddVarTab[i], data[i])) != FLASH_COMPLETE)
+	//if((EE_WriteVariable(VirtAddVarTab[i], data[i])) != FLASH_COMPLETE)
 	{
 	  err = FLASH_WRITE_FAIL;
 	}
@@ -70,9 +69,9 @@ flash_error write_flash(uint16_t* data)
 flash_error read_flash(uint16_t* data)
 {
   flash_error err = FLASH_ALL_OK;
-  for (i = 0; i < NumbOfVar; i++)
+  for (int i = 0; i < NUMBER_OF_VARS; i++)
   {
-    if((EE_ReadVariable(VirtAddVarTab[i], &data[i])) != FLASH_COMPLETE)
+    //if((EE_ReadVariable(VirtAddVarTab[i], &data[i])) != FLASH_COMPLETE)
    	{
       err = FLASH_READ_FAIL;
    	}

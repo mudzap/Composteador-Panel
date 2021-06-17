@@ -21,7 +21,7 @@ uint16_t usb_sample_time = DEFAULT_USB_SAMPLE_TIME;
 // El checkeo del tiempo minimo y maximo se realiza de forma
 // redundante, este debe de ser revisado en la interfaz
 // pero ofrece proteccion adicional de malos programadores (:-))
-uint16_t usb_set_sample_time(const uint16_tss time)
+uint16_t usb_set_sample_time(const uint16_t time)
 {
   uint16_t new_time = time;
 
@@ -67,9 +67,9 @@ usb_error usb_send_data(float* data)
 
   const uint8_t* tx_data = (uint8_t*)fixed_data;
   const uint16_t length = USB_DATA_VALUES*4;
-  if(CDC_Transmit_FS(tx_data, length) != USBD_OK) {
-    err = USB_TRANSMISSION_FAIL;
-  }
+  //if(CDC_Transmit_FS(tx_data, length) != USBD_OK) {
+  //  err = USB_TRANSMISSION_FAIL;
+  //}
 
   return err;
 
