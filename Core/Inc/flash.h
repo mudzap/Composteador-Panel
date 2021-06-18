@@ -31,17 +31,25 @@
 #endif
 */
 
-#define NUMBER_OF_VARS 8
+#define BYTE_DATA_LENGTH 8*4
+#define NUMBER_OF_DATA_BYTES 112
+#define FLASH_STRING_CONSTANT "DICyT"
+#define HEADER_CONSTANT_INDEX 0
+#define LENGTH_INDEX 2
+#define CRC_INDEX 3
+#define DATA_INDEX 4
 
 typedef enum flash_error {
   FLASH_ALL_OK,
   FLASH_INIT_FAIL,
   FLASH_WRITE_FAIL,
   FLASH_READ_FAIL,
+  FLASH_IS_PROGRAM,
+  FLASH_IS_CORRUPT,
 } flash_error;
 
 flash_error init_flash();
-flash_error write_flash(uint16_t* data);
-flash_error read_flash(uint16_t* data);
+flash_error write_flash(CRC_HandleTypeDef* hcrc, uint32_t* data);
+flash_error read_flash(CRC_HandleTypeDef* hcrc, uint32_t* data);
 
 #endif
