@@ -8,11 +8,8 @@
 
 #include "flash.h"
 
-/* Define a virtual addresses for config variables to store
- * These are filled automatically on init_flash()
- * NumbOfVar is defined in eeprom.h
- */
-static uint16_t VirtAddVarTab[NUMBER_OF_VARS];
+/* Preallocated memory for storing formatted data */
+static const uint8_t ones [FLASH_DATA_TOTAL_SIZE] = { [0 ... FLASH_DATA_TOTAL_SIZE-1] = 0xFF};
 static uint32_t prealloc_data[32];
 
 /**
@@ -43,7 +40,7 @@ flash_error write_flash(CRC_HandleTypeDef* hcrc, uint32_t* data)
   flash_error err = FLASH_ALL_OK;
   int shouldWrite = 1;
 
-  for (int i = 0; i < NUMBER_OF_VARS; i++)
+  //for (int i = 0; i < NUMBER_OF_VARS; i++)
   {
     //if((EE_ReadVariable(VirtAddVarTab[i], &data[i])) != FLASH_COMPLETE)
    	{
@@ -55,13 +52,8 @@ flash_error write_flash(CRC_HandleTypeDef* hcrc, uint32_t* data)
   uint32_t crc;
   if (err != FLASH_READ_FAIL) {
 
-	FLASH_EraseInitTypeDef f;
-	f.TypeErase = FLASH_TYPEERASE_PAGES;
-	f.PageAddress = addr;
-	f.NbPages = 1;
-
-	// If data header is not present, assume program memory
-	if (!strcmp((char*)data, FLASH_STRING_CONSTANT)) {
+	// If data header not present and is not only ones, assume program memory, otherwise get CRC to store it in flash along data
+	if (!memcmp(prealloc_data, ones, FLASH_DATA_TOTAL_SIZE) && !strcmp((char*)prealloc_data, FLASH_STRING_CONSTANT)) {
 
 	  err = FLASH_IS_PROGRAM;
 	  shouldWrite = 0;
@@ -69,7 +61,7 @@ flash_error write_flash(CRC_HandleTypeDef* hcrc, uint32_t* data)
 	} else {
 
 	  __HAL_RCC_CRC_CLK_ENABLE();
-	  crc = ~HAL_CRC_Calculate(hcrc, (uint32_t*) data, NUMBER_OF_DATA_BYTES/4);
+	  crc = ~HAL_CRC_Calculate(hcrc, data, NUMBER_OF_DATA_BYTES/4);
 	  __HAL_RCC_CRC_CLK_DISABLE();
 
 	}
@@ -79,13 +71,18 @@ flash_error write_flash(CRC_HandleTypeDef* hcrc, uint32_t* data)
   // If memory is not program memory, overwrites it in the given format
   if(shouldWrite) {
 
+	FLASH_EraseInitTypeDef f;
+	f.TypeErase = FLASH_TYPEERASE_PAGES;
+	//f.PageAddress = addr;
+	f.NbPages = 1;
+
 	// Formats data into standard format
-	strcpy(&prealloc_data[HEADER_CONSTANT_INDEX], FLASH_STRING_CONSTANT);
+	strcpy((char*)&prealloc_data[HEADER_CONSTANT_INDEX], FLASH_STRING_CONSTANT);
 	memcpy(&prealloc_data[DATA_INDEX], data, NUMBER_OF_DATA_BYTES);
 	prealloc_data[LENGTH_INDEX] = BYTE_DATA_LENGTH;
 
 	// Writes it
-    for (int i = 0; i < NUMBER_OF_VARS; i++)
+    //for (int i = 0; i < NUMBER_OF_VARS; i++)
 	{
 	  //if((EE_WriteVariable(VirtAddVarTab[i], prealloc_data[i])) != FLASH_COMPLETE)
       {
@@ -109,7 +106,7 @@ flash_error read_flash(CRC_HandleTypeDef* hcrc, uint32_t* data)
   flash_error err = FLASH_ALL_OK;
 
   // Read data into preallocated array
-  for (int i = 0; i < NUMBER_OF_VARS; i++)
+  //for (int i = 0; i < NUMBER_OF_VARS; i++)
   {
     //if((EE_ReadVariable(VirtAddVarTab[i], &prealloc_data[i])) != FLASH_COMPLETE)
    	{
@@ -119,8 +116,13 @@ flash_error read_flash(CRC_HandleTypeDef* hcrc, uint32_t* data)
 
   if (err != FLASH_READ_FAIL) {
 
-	// If data header is not present, assume program memory
-	if (!strcmp((char*)prealloc_data, FLASH_STRING_CONSTANT)) {
+	// If all zeros, empty
+	if (memcmp(prealloc_data, ones, FLASH_DATA_TOTAL_SIZE)) {
+
+	  err = FLASH_NO_DATA;
+
+	// If contains data, but not header assume program memory
+	} else if (!strcmp((char*)prealloc_data, FLASH_STRING_CONSTANT)) {
 
 	  err = FLASH_IS_PROGRAM;
 

@@ -51,8 +51,10 @@ control_error control_init()
   set_load_states(defaultStates);
 
   // Read stored values
-  uint16_t stored_vars[NUMBER_OF_VARS];
+  //uint16_t stored_vars[NUMBER_OF_VARS];
 
+  // Move to flash_init
+  /*
   if(read_flash(stored_vars) != FLASH_ALL_OK)
   {
 	  temp_ut = DEFAULT_TEMP_UT;
@@ -64,13 +66,14 @@ control_error control_init()
   }
   else
   {
-	  /* These values are speculative and should be defined according to how variables in flash are defined */
+	  // These values are speculative and should be defined according to how variables in flash are defined
 	  temp_ut = uint16_to_float(&stored_vars[0]);
 	  temp_lt = uint16_to_float(&stored_vars[2]);
 	  hum_ut = uint16_to_float(&stored_vars[4]);
 	  hum_lt = uint16_to_float(&stored_vars[6]);
 	  usb_sample_time = stored_vars[8];
   }
+  */
 
   return err;
 

@@ -10,6 +10,7 @@
 #define INC_FLASH_H_
 
 #include "stm32f1xx_hal.h"
+#include <string.h>
 
 /* Establishes last flash memory page address depending on device memory density (See datasheet)*/
 /* This will ensure there is no overflow when reading or writing */
@@ -31,13 +32,15 @@
 #endif
 */
 
-#define BYTE_DATA_LENGTH 8*4
-#define NUMBER_OF_DATA_BYTES 112
-#define FLASH_STRING_CONSTANT "DICyT"
-#define HEADER_CONSTANT_INDEX 0
-#define LENGTH_INDEX 2
-#define CRC_INDEX 3
-#define DATA_INDEX 4
+/* Defines for data storage standard */
+#define BYTE_DATA_LENGTH 8*4 			// Storing length allows the usage of previous smaller data if any changes occur
+#define NUMBER_OF_DATA_BYTES 112		//
+#define FLASH_STRING_CONSTANT "DICyT"	// See docs.
+#define HEADER_CONSTANT_INDEX 0			//
+#define LENGTH_INDEX 2					//
+#define CRC_INDEX 3						//
+#define DATA_INDEX 4					//
+#define FLASH_DATA_TOTAL_SIZE 128		//
 
 typedef enum flash_error {
   FLASH_ALL_OK,
@@ -46,6 +49,7 @@ typedef enum flash_error {
   FLASH_READ_FAIL,
   FLASH_IS_PROGRAM,
   FLASH_IS_CORRUPT,
+  FLASH_NO_DATA,
 } flash_error;
 
 flash_error init_flash();
